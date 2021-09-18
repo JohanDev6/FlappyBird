@@ -1,4 +1,4 @@
-import React, { useState, createContext, ReactNode } from 'react'
+import React, { useState, createContext } from 'react'
 
 import Themes from '../themes'
 

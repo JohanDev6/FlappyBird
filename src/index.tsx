@@ -15,7 +15,7 @@ const Root = () => {
   return(
       <ThemeProvider theme={data?.theme}>
           <GlobalStyles/>
-          <Routes/>a
+          <Routes/>
       </ThemeProvider>
   )
 }

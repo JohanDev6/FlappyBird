@@ -1,6 +1,6 @@
 import {createGlobalStyle} from 'styled-components'
 
-import { ITheme } from '../themes'
+import { ITheme } from '../interfaces/mainInterfaces'
 
 declare module 'styled-components' {
   interface DefaultTheme extends ITheme{}
@@ -25,10 +25,10 @@ export default createGlobalStyle`
         text-decoration: none;
         color: ${props => props.theme.link}
     }
-    
+
     .display-flex{
         display: flex;
         justify-content: center;
         align-items: center;
     }
-` 
+`
