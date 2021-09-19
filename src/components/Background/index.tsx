@@ -1,21 +1,30 @@
-export interface IBackground {
-  sprites: any;
-  canvas: HTMLCanvasElement | null;
-  context: any;
-  sourceX: number;
-  sourceY: number;
-  x: number;
-  y: number;
+class Background{
+  sprites: HTMLImageElement;
+  context : CanvasRenderingContext2D;
+  canvas: HTMLCanvasElement;
+
+  width = 275;
+  height = 194;
+  sourceX = 390;
+  sourceY = 0;
+  x = 0;
+  y = 0;
+
+  constructor(sprites : HTMLImageElement, context : CanvasRenderingContext2D, canvas: HTMLCanvasElement){
+    this.sprites = sprites
+    this.context = context
+    this.canvas = canvas
+    this.y = canvas.height
+  }
+
+  render(){
+
+    this.context.fillStyle = '#70c5ce';
+    this.context.fillRect(0,0, this.canvas.width, this.canvas.height)
+
+    this.context.drawImage(this.sprites, this.sourceX, this.sourceY, this.width, this.height, this.x, (this.y - this.height), this.width, this.height)
+    this.context.drawImage(this.sprites, this.sourceX, this.sourceY, this.width, this.height, (this.x + this.width), (this.y - this.height), this.width, this.height)
+  }
 }
 
-export default function Background({sprites, canvas, context, sourceX, sourceY, x, y} : IBackground){
-
-  const height = 114;
-  const width = 275;
-
-  context.fillStyle = '#74b1f7'
-  context.fillRect(0,0, canvas?.width, canvas?.height)
-
-  context.drawImage(sprites, sourceX, sourceY, width, height, x, (y - height), width, height)
-  context.drawImage(sprites, sourceX, sourceY, width, height, (x + width), (y - height), width, height)
-}
+export default Background

@@ -2,71 +2,165 @@ import React, { ReactElement, useRef, useEffect, useState } from 'react'
 
 import { Container } from './styles'
 
-import Bird from '../../components/Bird'
-import Background from '../../components/Background'
-import Floor from '../../components/Floor'
+import bird from '../../components/Bird'
+import background from '../../components/Background'
+import floor from '../../components/Floor'
+import menu from '../../components/Menu'
+import pipes from '../../components/Pipes'
+import score from '../../components/Score'
+import endMenu from '../../components/EndMenu'
+
+interface IScreen {
+  renderCanvas: () => void;
+  updateCanvas: () => void;
+  click?: () => void;
+}
+
+declare global {
+    interface Window {
+        currentScreen: IScreen;
+        startScreen: IScreen;
+        endScreen: IScreen
+        score: number;
+        die: boolean;
+    }
+}
+
+window.score = 0;
+window.bestScore = 0;
 
 export default function GamePage() : ReactElement {
 
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const [canvasEl, setCanvas] = useState<HTMLCanvasElement | null>()
   const [context, setContext] = useState<CanvasRenderingContext2D | null>()
-  const [gameSprite, setGameSprite] = useState<HTMLImageElement>()
+  const [gameSprite, setGameSprite] = useState<HTMLImageElement | null>()
+  const [currentScreen, setCurrentScreen] = useState<IScreen | null>()
+
+  let frames = 0;
+
+  const switchScreen = (newScreen: IScreen) => {
+    window.currentScreen = newScreen
+  }
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const sprites = new Image();
+    let canvas = canvasRef.current;
+    let context = canvas?.getContext('2d');
+    let sprites = new Image();
 
-    const context2d = canvas?.getContext('2d');
-    sprites.src = 'game.png'
+    sprites.src = 'game.png';
 
-    setContext(context2d)
-    setGameSprite(sprites)
+    sprites.onload = () => {
+      console.log('[Sprites] Loaded with success!')
+      setGameSprite(sprites)
+      setCanvas(canvas)
+      setContext(context)
+    }
+
   }, [])
 
   useEffect(() => {
-    if(context && gameSprite){
-      gameSprite.onload = () => {
-          looping()
+    if(gameSprite && context && canvasEl){
+
+      let Bird = new bird(gameSprite as HTMLImageElement, context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
+      let Background = new background(gameSprite as HTMLImageElement, context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
+      let Floor = new floor(gameSprite as HTMLImageElement, context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
+      let Menu = new menu(gameSprite as HTMLImageElement, context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
+      let Pipes = new pipes(gameSprite as HTMLImageElement, context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
+      let Score = new score(context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
+      let EndMenu = new endMenu(gameSprite as HTMLImageElement, context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
+
+      let gameScreen : IScreen = {
+        renderCanvas: () => {
+          Background.render();
+          Bird.render();
+          Pipes.render();
+          Score.render();
+          Floor.render();
+        },
+        click: () => {
+          Bird.jumping();
+        },
+        updateCanvas: () => {
+          Floor.update();
+          Bird.update();
+          Bird.animation(frames);
+          if(Bird.observerCollision(Floor.y)){
+            switchScreen(endScreen)
+          };
+          Pipes.update(frames, Bird.y, Bird.x, Bird.height, Bird.width);
+          Score.update(frames);
+        }
       }
+
+      let initScreen : IScreen = {
+        renderCanvas: () => {
+          Background.render();
+          Floor.render();
+          Menu.render();
+          Bird.render();
+        },
+        click: () => {
+          switchScreen(gameScreen)
+        },
+        updateCanvas: () => {
+          Bird.animation(frames);
+          Floor.update();
+        }
+      }
+
+      let endScreen : IScreen = {
+        renderCanvas: () => {
+          Background.render();
+          Pipes.render();
+          EndMenu.render(window.bestScore, window.score);
+          Bird.render();
+          Floor.render();
+        },
+        click: () => {
+          Score.reset();
+          Bird.reset();
+          Pipes.resetPipes();
+          Pipes.reset(null);
+
+          switchScreen(initScreen)
+        },
+        updateCanvas: () => {
+        }
+      }
+
+      switchScreen(initScreen)
+      window.startScreen = initScreen;
+      window.endScreen = endScreen;
     }
-  }, [context, gameSprite])
+  }, [gameSprite, context, canvasEl])
+
+  useEffect(() => {
+    if(window.currentScreen && gameSprite && context){
+      looping()
+    }
+  }, [currentScreen, gameSprite, context])
+
+  window.addEventListener('click', () => {
+    if(window.currentScreen && window.currentScreen.click) {
+      window.currentScreen.click()
+    }
+  })
 
   const looping = () => {
+    context?.clearRect(0, 0, canvasEl?.width as number, canvasEl?.height as number);
 
-    Background({
-      sprites: gameSprite,
-      canvas: canvasRef.current? canvasRef.current : null,
-      context,
-      sourceX: 390,
-      sourceY: 0,
-      x: 0,
-      y: canvasRef.current? canvasRef.current.height : 0
-    })
-
-    Floor({
-      sprites: gameSprite,
-      context,
-      sourceX: 0,
-      sourceY: 610,
-      x: 0,
-      y: canvasRef.current? canvasRef.current.height: 0
-    })
-
-    Bird({
-      sprites: gameSprite,
-      context,
-      sourceX: 0,
-      sourceY: 0,
-      x: 10,
-      y: 50,
-    })
+    frames += 1
+    window.currentScreen?.renderCanvas();
+    window.currentScreen?.updateCanvas();
 
     requestAnimationFrame(looping)
+
   }
 
 	return (
 		<Container className='display-flex'>
-      <canvas ref={canvasRef}>
+      <canvas width='518' height='540' ref={canvasRef}>
       </canvas>
 		</Container>
 	)

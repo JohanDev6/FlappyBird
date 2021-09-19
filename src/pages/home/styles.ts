@@ -8,7 +8,7 @@ export const Container = styled.section`
     border: 1px solid ${props => props.theme.main};
     border-radius: 11px;
 
-    width: 560px;
-    height: 98%;
+    /* width: 560px;
+    height: 98%; */
   }
 `
