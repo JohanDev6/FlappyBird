@@ -58,7 +58,7 @@ class Pipes{
     const downBird = birdY + birdHeight;
 
     if((birdX + birdWidth) >= pipe.x){
-      if(headBird <= pipe.up.y){
+      if(headBird <= (pipe.up.y + 30)){
         return true;
       }
       if(downBird >= pipe.down.y){
@@ -77,7 +77,7 @@ class Pipes{
     if(bird) {bird.reset()}
   }
 
-  update(frames : number, birdY : number, birdX : number, birdHeight : number, birdWidth : number){
+  update(frames : number, birdY : number, birdX : number, birdHeight : number, birdWidth : number, fallSound : HTMLAudioElement, hitSound : HTMLAudioElement){
 
       if(this.die){
         window.currentScreen = window.endScreen;
@@ -97,6 +97,8 @@ class Pipes{
 
         if(this.observerCollision(pipe, birdY, birdX, birdHeight, birdWidth)){
           this.die = true;
+          hitSound.play();
+          fallSound.play();
           this.reset(null)
         }
 

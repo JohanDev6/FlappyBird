@@ -35,7 +35,7 @@ export default function GamePage() : ReactElement {
   const [canvasEl, setCanvas] = useState<HTMLCanvasElement | null>()
   const [context, setContext] = useState<CanvasRenderingContext2D | null>()
   const [gameSprite, setGameSprite] = useState<HTMLImageElement | null>()
-  const [currentScreen, setCurrentScreen] = useState<IScreen | null>()
+  const [gameSounds, setGameSounds] = useState<HTMLAudioElement[] | null>(null)
 
   let frames = 0;
 
@@ -47,11 +47,21 @@ export default function GamePage() : ReactElement {
     let canvas = canvasRef.current;
     let context = canvas?.getContext('2d');
     let sprites = new Image();
+    let sounds : HTMLAudioElement[] = [];
 
     sprites.src = 'game.png';
 
+    sounds[0] = new Audio();
+    sounds[0].src = 'efeitos_caiu.wav'
+    sounds[1] = new Audio();
+    sounds[1].src = 'efeitos_hit.wav'
+    sounds[2] = new Audio();
+    sounds[2].src = 'efeitos_ponto.wav'
+    sounds[3] = new Audio();
+    sounds[3].src = 'efeitos_pulo.wav'
+
     sprites.onload = () => {
-      console.log('[Sprites] Loaded with success!')
+      setGameSounds(sounds)
       setGameSprite(sprites)
       setCanvas(canvas)
       setContext(context)
@@ -60,7 +70,7 @@ export default function GamePage() : ReactElement {
   }, [])
 
   useEffect(() => {
-    if(gameSprite && context && canvasEl){
+    if(gameSprite && context && canvasEl && gameSounds){
 
       let Bird = new bird(gameSprite as HTMLImageElement, context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
       let Background = new background(gameSprite as HTMLImageElement, context as CanvasRenderingContext2D, canvasEl as HTMLCanvasElement)
@@ -79,17 +89,15 @@ export default function GamePage() : ReactElement {
           Floor.render();
         },
         click: () => {
-          Bird.jumping();
+          Bird.jumping(gameSounds[3]);
         },
         updateCanvas: () => {
           Floor.update();
-          Bird.update();
+          Bird.update(Floor.y, gameSounds[1]);
           Bird.animation(frames);
-          if(Bird.observerCollision(Floor.y)){
-            switchScreen(endScreen)
-          };
-          Pipes.update(frames, Bird.y, Bird.x, Bird.height, Bird.width);
-          Score.update(frames);
+          Bird.fallAnimation(frames);
+          Pipes.update(frames, Bird.y, Bird.x, Bird.height, Bird.width, gameSounds[0], gameSounds[1]);
+          Score.update(frames, gameSounds[2]);
         }
       }
 
@@ -114,8 +122,8 @@ export default function GamePage() : ReactElement {
           Background.render();
           Pipes.render();
           EndMenu.render(window.bestScore, window.score);
-          Bird.render();
           Floor.render();
+          Bird.render();
         },
         click: () => {
           Score.reset();
@@ -126,6 +134,7 @@ export default function GamePage() : ReactElement {
           switchScreen(initScreen)
         },
         updateCanvas: () => {
+          Bird.update((Floor.y + 23), null);
         }
       }
 
@@ -133,13 +142,13 @@ export default function GamePage() : ReactElement {
       window.startScreen = initScreen;
       window.endScreen = endScreen;
     }
-  }, [gameSprite, context, canvasEl])
+  }, [gameSprite, context, canvasEl, gameSounds])
 
   useEffect(() => {
     if(window.currentScreen && gameSprite && context){
       looping()
     }
-  }, [currentScreen, gameSprite, context])
+  }, [gameSprite, context])
 
   window.addEventListener('click', () => {
     if(window.currentScreen && window.currentScreen.click) {

@@ -29,8 +29,8 @@ class EndGame{
     this.context.fillStyle = 'white';
     this.context.textAlign = 'right';
 
-    this.context.fillText(`${score}`, (this.x + this.width) - 40, (this.y - this.height) + (this.height / 2));
-    this.context.fillText(`${bestScore}`, (this.x + this.width) - 40, (this.y - this.height) + (this.height / 2) + 40);
+    this.context.fillText(`${score}s`, (this.x + this.width) - 40, (this.y - this.height) + (this.height / 2));
+    this.context.fillText(`${bestScore}s`, (this.x + this.width) - 40, (this.y - this.height) + (this.height / 2) + 40);
   }
 }
 
