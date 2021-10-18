@@ -1,67 +1,47 @@
-<img width='100%' src='https://miro.medium.com/max/2048/1*Ukhx76VQ8E6JXEW7xfIzSA.png'/>
+<img width='100%' src='https://res.cloudinary.com/tanjirin/image/upload/v1634572054/pklmrn4wsqbzj9sybiao.png'/>
 
-<h1 align='center' size='4rem'> Template React with Styled, React Router, Jest and Enzyme 🔥 </h1>
+# Flappy Game
 
-<p align='center'>
-This template was made to start react projects with ts in a clean way. 
-But already prepared for any complexity using typing and even unit testing with Jest.
-</p>
+> Esse projeto é um clone do famoso jogo Flappy Bird, fiz usando React Js e toda parte funcional do jogo foi feito usando classes com a api do canvas puramente, apliquei  alguns conceitos basico de um GameDev simples.
+
+# Deploy
+
+<!-- [Vercel Deploy](https://web-getlearn.vercel.app/app) -->
 
 ## Features
 
-- Clean Structure
-- Easy manipulation
-- Theming
-- Context
-- Routers
-- Typing
-- Testing
+- Animações
+- Screen Machine
+- Game design
+- Sounds
 
-## Tools, Techs & Main libs
+## Tools, Techs & Principais Libs
 
-- React Router
+- React
 - Styled Components
-- React Spring
-- React test renderer and Enzyme
 - React Icons
+- Canvas Pure
 
-## Folder structure
-
-```graphql
-.
-├── src
-│   ├── components
-│   │   ├── button # Folder for component
-│   │   │   └── index.tsx
-│   │   │       styles.ts
-│   │   │       component.spec.ts
-│   ├── pages or screens
-│   │   ├── home # Folder for page
-│   │   │   └── index.tsx
-│   │   │       styles.ts
-│   │   ├── notfound # Folder for page
-│   │   │   └── index.tsx
-│   │   │       styles.ts
-│   ├── providers
-│   │   ├── mainProvider.tsx
-│   └── utils or hooks
-│       └── useTitle.tsx
-|           [...]
-└── [...rest] Default files app.tsx, index.tsx, themes and etc... 
-```
-
-## Init your development
+## Instalação
 
 ```bash
-$ git clone https://github.com/JohanDev6/Template-My-react-typescript-styled
-$ yarn install
-$ cd src/
-$ yarn start
+$ git clone https://github.com/JohanDev6/GAME_FlappyBird
+$ cd GAME_FlappyBird
+$ yarn build
 ```
 
-## Contribution to template
+## Contribuição
 
-Please use [issue tracker](https://github.com/JohanDev6/Template-My-react-typescript-styled/issues) to report bugs or make push requests.
+#### Reporte bugs ou Features Request
 
+Porfavor use o [issue tracker](https://github.com/JohanDev6/GAME_FlappyBird/issues) para reportar bugs ou fazer push requests.
 
+#### Developing
 
+Para PRs use o ambiente de desenvolvimento
+
+```bash
+$ git clone https://github.com/JohanDev6/GAME_FlappyBird
+$ cd GAME_FlappyBird
+$ yarn start
+```
