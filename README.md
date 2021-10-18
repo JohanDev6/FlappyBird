@@ -1,4 +1,4 @@
-<img width='100%' src='https://res.cloudinary.com/tanjirin/image/upload/v1634572054/pklmrn4wsqbzj9sybiao.png'/>
+<img width='100%' src='https://res.cloudinary.com/dbklberci/image/upload/v1634576161/Screenshot4_jyvuke.png'/>
 
 # Flappy Game
 
@@ -6,7 +6,7 @@
 
 # Deploy
 
-<!-- [Vercel Deploy](https://web-getlearn.vercel.app/app) -->
+[Vercel Deploy](https://game-flappy-bird.vercel.app/)
 
 ## Features
 
